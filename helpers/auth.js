@@ -3,7 +3,7 @@ const db = require('../db');
 
 async function signIn(req, res, next) {
   try {
-    const User = await db.User.findOne({
+    const User = await db.UserModel.findOne({
       email: req.body.email,
     });
     if (!User) {
@@ -41,18 +41,18 @@ async function signUp(req, res, next) {
     const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
     const isValidEmail = emailRegex.test(req.body.email);
     if (isValidEmail) {
-      const user = await db.User.create(req.body);
-      const { _id, username, profileImageUrl } = user;
+      const user = await db.UserModel.create(req.body);
+      const { id, username, profileImageUrl } = user;
       const token = jwt.sign(
         {
-          id: _id,
+          id,
           username,
           profileImageUrl,
         },
         process.env.SECRET_KEY,
       );
       return res.status(200).json({
-        id: _id,
+        id,
         username,
         profileImageUrl,
         token,

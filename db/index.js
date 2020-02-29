@@ -10,4 +10,5 @@ mongoose.connect('mongodb://localhost/warbler', {
   useUnifiedTopology: true,
 });
 
-module.exports.User = require('./User');
+module.exports.UserModel = require('./User');
+module.exports.MessageModel = require('./Message');
