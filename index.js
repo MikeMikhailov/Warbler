@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const errorHandler = require('./helpers/errorHandler');
+const errorHandler = require('./middleware/errorHandler');
 const authRoutes = require('./routes/auth');
 
 const app = express();
