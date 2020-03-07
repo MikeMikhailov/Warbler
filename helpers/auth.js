@@ -40,25 +40,28 @@ async function signUp(req, res, next) {
   try {
     const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
     const isValidEmail = emailRegex.test(req.body.email);
-    if (isValidEmail) {
-      const user = await db.UserModel.create(req.body);
-      const { id, username, profileImageUrl } = user;
-      const token = jwt.sign(
-        {
-          id,
-          username,
-          profileImageUrl,
-        },
-        process.env.SECRET_KEY,
-      );
-      return res.status(200).json({
+    if (!isValidEmail) {
+      throw new Error('The email you entered is not a valid email!');
+    }
+    if (req.body.password.length < 8) {
+      throw new Error('The password should be at least 8 characters');
+    }
+    const user = await db.UserModel.create(req.body);
+    const { id, username, profileImageUrl } = user;
+    const token = jwt.sign(
+      {
         id,
         username,
         profileImageUrl,
-        token,
-      });
-    }
-    throw new Error('The email you entered is not a valid email!');
+      },
+      process.env.SECRET_KEY,
+    );
+    return res.status(200).json({
+      id,
+      username,
+      profileImageUrl,
+      token,
+    });
   } catch (err) {
     if (err.code === 11000) {
       err.message = 'Sorry, that username and/or email is taken!';
