@@ -4,17 +4,19 @@ const bcrypt = require('bcrypt');
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
-    required: 'You need to enter an email!',
-    unique: 'This email has already been used',
+    required: '#You need to enter an email#',
+    unique: true,
+    match: [/^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, '#The email you entered is not a valid email#'],
   },
   username: {
     type: String,
-    required: 'You need to enter a username',
-    unique: 'This username has already been used',
+    required: '#You need to enter a username#',
+    unique: true,
   },
   password: {
     type: String,
-    required: 'You need to enter a password',
+    required: [true, '#You need to enter a password#'],
+    minlength: [8, '#The password should be at least 8 characters#'],
   },
   profileImageUrl: {
     type: String,

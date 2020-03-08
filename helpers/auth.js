@@ -38,14 +38,6 @@ async function signIn(req, res, next) {
 
 async function signUp(req, res, next) {
   try {
-    const emailRegex = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
-    const isValidEmail = emailRegex.test(req.body.email);
-    if (!isValidEmail) {
-      throw new Error('The email you entered is not a valid email!');
-    }
-    if (req.body.password.length < 8) {
-      throw new Error('The password should be at least 8 characters');
-    }
     const user = await db.UserModel.create(req.body);
     const { id, username, profileImageUrl } = user;
     const token = jwt.sign(
@@ -63,8 +55,22 @@ async function signUp(req, res, next) {
       token,
     });
   } catch (err) {
+    //  * Giving unique validator a custom message
     if (err.code === 11000) {
       err.message = 'Sorry, that username and/or email is taken!';
+    } else if (err.message.indexOf('#') !== -1) {
+      //  * Displaying multiple validation errors by using # as separator
+      const indices = [];
+      for (let i = 0; i < err.message.length; i += 1) {
+        if (err.message[i] === '#') {
+          indices.push(i);
+        }
+      }
+      let errorMessage = '';
+      for (let j = 1; j < indices.length; j += 2) {
+        errorMessage += `${err.message.substring(indices[j - 1] + 1, indices[j])}\n`;
+      }
+      err.message = errorMessage.slice(0, -1);
     }
     return next({
       status: 400,
