@@ -31,8 +31,14 @@ async function getMessage(req, res, next) {
 async function deleteMessage(req, res, next) {
   try {
     const FoundMessage = await db.MessageModel.findById(req.params.message_id);
-    await FoundMessage.remove();
-    return res.status(200).json(FoundMessage);
+    if (req.params.id === FoundMessage.author.toString()) {
+      await FoundMessage.remove();
+      return res.status(200).json(FoundMessage);
+    }
+    return next({
+      status: 401,
+      message: 'You are not authorized to do this',
+    });
   } catch (err) {
     return next(err);
   }
