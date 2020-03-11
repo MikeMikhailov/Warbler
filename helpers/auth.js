@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const db = require('../db');
+const SECRET_KEY = process.env.SECRET_KEY;
 
 async function signIn(req, res, next) {
   try {
@@ -18,7 +19,7 @@ async function signIn(req, res, next) {
           username,
           profileImageUrl,
         },
-        process.env.SECRET_KEY,
+        SECRET_KEY,
       );
       return res.status(200).json({
         id,
@@ -46,7 +47,7 @@ async function signUp(req, res, next) {
         username,
         profileImageUrl,
       },
-      process.env.SECRET_KEY,
+      SECRET_KEY,
     );
     return res.status(200).json({
       id,
