@@ -21,6 +21,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "./node_modules/.bin/nodemon index.js",
-    "start": "node index.js"
+    "start": "node index.js",
+    "publish-server": "cd ../ && git subtree push --prefix server server master"
   }
 }
