@@ -1,11 +1,10 @@
+/* eslint-disable consistent-return */
 const jwt = require('jsonwebtoken');
 
-const { SECRET_KEY } = process.env;
-// eslint-disable-next-line consistent-return
 function isLoggedIn(req, res, next) {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    jwt.verify(token, SECRET_KEY, (err, decodedToken) => {
+    jwt.verify(token, process.env.SECRET_KEY, (err, decodedToken) => {
       if (decodedToken) {
         return next();
       }
@@ -22,11 +21,10 @@ function isLoggedIn(req, res, next) {
   }
 }
 
-// eslint-disable-next-line consistent-return
 function isAuthorized(req, res, next) {
   try {
     const token = req.headers.authorization.split(' ')[1];
-    jwt.verify(token, SECRET_KEY, (err, decodedToken) => {
+    jwt.verify(token, process.env.SECRET_KEY, (err, decodedToken) => {
       if (decodedToken && decodedToken.id === req.params.id) {
         return next();
       }
